@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!-- 以下がないとstaticが使えない -->
+{% load static %}
+<html lang="ja">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>index.html</title>
+  <script type="text/javascript" src="{% static 'cat_iga/js/jquery-3.4.1.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'cat_iga/js/bootstrap.bundle.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'javascript/sample.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <link rel="stylesheet" href="{% static 'cat_iga/css/bootstrap.min.css' %}">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1 class="border-bottom">GA画像生成: 第{{ generation }}世代</h1>
+
+    <div class="container-fluid">
+      <div class="row">
+        {% for path in img_path_list %}
+        <div class="col-sm-2 Item" id='gen{{ forloop.counter }}' onclick="clk(this)">
+          <figure>
+          <img src={{ path }} width="100%" height="100%" border="0" />
+          <figcaption class="decorator">{{ forloop.counter0 }}</figcaption>
+          </figure>          
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <form action="{% url 'next_generation' new_generation=generation %}" method="post" class="pad">
+        {% csrf_token %}
+        <fieldset>
+        <tr class="margin">
+          <th><label for="id_name">Select Superior Genes:</label></th>
+          <td><input type="text" name="name" required id="id_name" /></td>
+        </tr>
+        </fieldset>
+        <input type="submit" value="Next Generation" class="button_next">
+    </form>
+    {% if generation == 1 %}
+      <form action="{% url 're_create' %}" method="post" class="pad">
+        {% csrf_token %}
+        <input type="submit" value="re_create" class="button_re">
+      </form>    
+    {% endif %}
+</body>
+
+</html>
